@@ -2,15 +2,14 @@
 
 Description
 
-
 ## Installation
 
-```bash 
+```bash
 git clone git@github.com:myrov01/geotools.git
 cd ./geotools
-python -m venv ./evn
+python -m venv ./env
 . ./evn/Scripts/activate
-# r"C:\Users\user\Desktop\vegetation-polygon_1\vegetation-polygon.gpkg" - использовал для указания пути к файлу сырую строку 
+pip install -r ./requirements.txt
 ```
 
 ## Usage
