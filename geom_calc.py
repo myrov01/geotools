@@ -14,13 +14,14 @@ def geom_calc(geom):
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     gdf = gpd.read_file("./vegetation-polygon.gpkg")
 
-    geom = gdf["geometry"]
+    geometry = gdf["geometry"]
 
-    point_count = geom_calc(geom)
+    total_points = 0
 
-    total_points = point_count.sum()
+    for geom in geometry:
+        total_points += geom_calc(geom)
 
     print(f"Total points: {total_points}")
