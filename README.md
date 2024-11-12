@@ -2,9 +2,9 @@
 
 Geotools - this is a set of scripts for solving two educational tasks.
 
-`geom_calc` from [myrov01](github.com/myrov01)
+`geom_calc` from [myrov01](https://github.com/myrov01)
 
-`track_length` from [deisnau](github.com/deisnau)
+`track_length` from [deisnau](https://github.com/deisnau)
 
 ## Installation
 
