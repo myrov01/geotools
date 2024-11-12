@@ -1,6 +1,10 @@
 # Geotools
 
-Description
+Geotools - this is a set of scripts for solving two educational tasks.
+
+`geom_calc` from [myrov01](github.com/myrov01)
+
+`track_length` from [deisnau](github.com/deisnau)
 
 ## Installation
 
@@ -8,42 +12,22 @@ Description
 git clone git@github.com:myrov01/geotools.git
 cd ./geotools
 python -m venv ./env
-. ./evn/Scripts/activate
+. ./env/Scripts/activate
 pip install -r ./requirements.txt
 ```
 
 ## Usage
 
-This script uses the library `geopandas` for reading geographical data and calculating the total number of coordinates of points (including outer and inner rings) in polygons and multipolygons from the GeoPackage file.
+Script *geom_calc* uses the library `geopandas` for reading geographical data and calculating the total number of coordinates of points (including outer and inner rings) in polygons and multipolygons from the GeoPackage file.
 
-### Installation
+Script *track_length* uses the library `geopandas` for reading *.gpx file and calculating track's lengths.
 
-Make sure you have the library installed before using it `geopandas`:
-```bash
-pip install geopandas
-```
+<!-- кажется, то, что в этом разделе нужно под первый заголовок, а здесь описать что принимается на входе, что получается на выходе -->
+
+## Test data for `geom_calc`
+
 The test data set can be downloaded from the link: https://youtrack.nextgis.net/issue/ILB-81/Sozdanie-skripta-geomcalc-i-geomsut-dlya-osnovnogo-instrumenta-konvertacii-gpkgsxf
 
-Copy the vegetation-polygon file.gpkg to the same folder where the script is located, or specify the path to another GeoPackage file containing polygonal data.
+## Test data for `track_length`
 
-Run the script from the command line:
-```bash
-python script_name.py
-```
-The result of the script will show the total number of coordinates of points in polygons and multipolygons from the specified file.
-
-After running the script, you will see the output in the format:
-```bash
-Total points: <число>
-```
-The script loads geometric data from the vegetation-polygon.gpkg file.
-
-The geo_calc function counts the number of points (coordinates) in each polygon and multipolygon.
-
-The outer rings and inner rings (nested polygons) are counted in the total score.
-
-Make sure that the geometry column is present in the Getpackage file, otherwise the script will not be able to process the data.
-
-Only Polygon and MultiPolygon geometries are supported.
-
-Replace `script_name.py ` to the actual name of your script.
+The test data set can be downloaded from the link: https://drive.google.com/file/d/1kzwrBtGKJvTfH-aRzoBY2p9av3golpNe/view?usp=drive_link 
