@@ -19,6 +19,7 @@ if __name__ == "__main__":
             max_poligon_points = point_count
 
         threshold_value = 500
+
         if point_count >= threshold_value:
             print(f"The number of points in the polygon: {point_count}")
 
@@ -26,6 +27,7 @@ if __name__ == "__main__":
     sorted_list.sort()
 
     three_max_poligon_points = sorted_list[-3:]
+
     for index, count in enumerate(three_max_poligon_points):
         print(f"\nPolygon {index} with {count} points")
 
