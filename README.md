@@ -15,7 +15,8 @@ git clone git@github.com:myrov01/geotools.git
 cd ./geotools
 python -m venv ./env
 . ./env/Scripts/activate
-pip install -r ./requirements.txt
+pip install -e .
+pip install -e .[dev] # for run test
 ```
 
 ## Usage

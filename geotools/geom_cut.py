@@ -1,7 +1,7 @@
 import geopandas as gpd
 from shapely.ops import split
 from shapely.geometry import MultiPolygon, LineString
-from geom_calc import geom_calc
+from geotools.geom_calc import geom_calc
 import argparse
 import os
 
@@ -27,8 +27,7 @@ def divide_polygon(polygon, max_vertices, direction="vertical"):
     split_result = split(polygon, cutting_line)
 
     parts = (
-        list(split_result) if isinstance(
-            split_result, MultiPolygon) else [split_result]
+        list(split_result) if isinstance(split_result, MultiPolygon) else [split_result]
     )
 
     valid_parts = []
@@ -67,12 +66,11 @@ def process_polygon(geom, max_vertices=200000):
     return valid_geometries, is_split
 
 
-if __name__ == "__main__":
+def main():
 
     initial_polygon_count = 0
     split_count = 0
-    parser = argparse.ArgumentParser(
-        description="Upload and process vector files.")
+    parser = argparse.ArgumentParser(description="Upload and process vector files.")
 
     parser.add_argument(
         "files", nargs="+", help="Paths to vector files for processing."
@@ -129,15 +127,17 @@ if __name__ == "__main__":
                 all_geometries.append(part)
                 all_attributes.append(row.drop("geometry"))
 
-    result_gdf = gpd.GeoDataFrame(
-        all_attributes, geometry=all_geometries, crs=gdf.crs)
+    result_gdf = gpd.GeoDataFrame(all_attributes, geometry=all_geometries, crs=gdf.crs)
 
     final_polygon_count = len(result_gdf)
 
     base_name = os.path.basename(args.files[0])
     name, extension = os.path.splitext(base_name)
-    output_file = os.path.join(args.output_folder, f"{name}{
-                               args.suffix}{extension}")
+    output_file = os.path.join(
+        args.output_folder,
+        f"{name}{
+                               args.suffix}{extension}",
+    )
 
     try:
         result_gdf.to_file(output_file, layer="result", driver="GPKG")
@@ -151,3 +151,7 @@ if __name__ == "__main__":
     print(f"Initial number of polygons: {initial_polygon_count}")
     print(f"Number of polygons that were split: {split_count}")
     print(f"Number of polygons after processing: {final_polygon_count}")
+
+
+if __name__ == "__main__":
+    main()
