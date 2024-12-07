@@ -21,11 +21,12 @@ def test_simple_process_polygon():
     all_geoms_length = 0
 
     for geom in geometries:
-        if geom:        
-            divided_parts = process_polygon(geom, 2)
+        if geom:
+            divided_parts = process_polygon(geom, 4)
             all_geoms_length += len(divided_parts)
 
     assert all_geoms_length == 2
+
 
 def test_no_process_polygon():
     geometries = get_geometries()
@@ -33,8 +34,8 @@ def test_no_process_polygon():
     all_geoms_length = 0
 
     for geom in geometries:
-        if geom:        
-            divided_parts = process_polygon(geom, 6)
+        if geom:
+            divided_parts = process_polygon(geom, 16)
             all_geoms_length += len(divided_parts)
 
     assert all_geoms_length == 1

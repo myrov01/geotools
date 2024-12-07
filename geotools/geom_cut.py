@@ -1,16 +1,19 @@
 import geopandas as gpd
 from shapely.ops import split
-from shapely.geometry import MultiPolygon, LineString
+from shapely.ops import unary_union
+from shapely.geometry import LineString
 from geotools.geom_calc import geom_calc
 import argparse
 import os
+
+# из-за того, что эту функцию вызывает и shapely и geopandas нам нужен единый формат wkt, иначе он просто не вернет то, что мы ожидаем, так как то, что возвращается должно быть сохранено geopandas-ом файлом и обратно
 
 
 def divide_polygon(polygon, max_vertices, direction="vertical"):
 
     length_polygon = geom_calc(polygon)
 
-    if length_polygon <= max_vertices:
+    if length_polygon <= max_vertices or length_polygon <= 4:
         return [polygon]
 
     min_x, min_y, max_x, max_y = polygon.bounds
@@ -26,14 +29,13 @@ def divide_polygon(polygon, max_vertices, direction="vertical"):
 
     split_result = split(polygon, cutting_line)
 
-    parts = (
-        list(split_result) if isinstance(split_result, MultiPolygon) else [split_result]
-    )
+    parts = unary_union(split_result)
 
     valid_parts = []
 
     for part in parts:
-        valid_polygon = divide_polygon(part, max_vertices, next_direction)
+        valid_polygon = divide_polygon(
+            part, max_vertices, next_direction)
         valid_parts.extend(valid_polygon)
 
     return valid_parts
@@ -42,35 +44,30 @@ def divide_polygon(polygon, max_vertices, direction="vertical"):
 def process_polygon(geom, max_vertices=200000):
 
     valid_geometries = []
-    is_split = False
 
     if geom.is_empty:
         print(f"Object is empty, skipping.")
-        return [], is_split
+        return []
 
     if geom.geom_type == "Polygon":
         divided_polygon = divide_polygon(geom, max_vertices)
         valid_geometries.extend(divided_polygon)
-        if len(divided_polygon) > 1:
-            is_split = True
-
     elif geom.geom_type == "MultiPolygon":
         for subpolygon in geom.geoms:
             divided_polygon = divide_polygon(subpolygon, max_vertices)
             valid_geometries.extend(divided_polygon)
-            if len(divided_polygon) > 1:
-                is_split = True
     else:
         print(f"Invalid geometry type {geom.geom_type}, skipping.")
 
-    return valid_geometries, is_split
+    return valid_geometries
 
 
 def main():
 
     initial_polygon_count = 0
     split_count = 0
-    parser = argparse.ArgumentParser(description="Upload and process vector files.")
+    parser = argparse.ArgumentParser(
+        description="Upload and process vector files.")
 
     parser.add_argument(
         "files", nargs="+", help="Paths to vector files for processing."
@@ -118,16 +115,14 @@ def main():
         for index, row in gdf.iterrows():
             geom = row["geometry"]
 
-            divided_parts, is_split = process_polygon(geom, args.max_vertices)
-
-            if is_split:
-                split_count += 1
+            divided_parts = process_polygon(geom, args.max_vertices)
 
             for part in divided_parts:
                 all_geometries.append(part)
                 all_attributes.append(row.drop("geometry"))
 
-    result_gdf = gpd.GeoDataFrame(all_attributes, geometry=all_geometries, crs=gdf.crs)
+    result_gdf = gpd.GeoDataFrame(
+        all_attributes, geometry=all_geometries, crs=gdf.crs)
 
     final_polygon_count = len(result_gdf)
 
@@ -136,7 +131,7 @@ def main():
     output_file = os.path.join(
         args.output_folder,
         f"{name}{
-                               args.suffix}{extension}",
+            args.suffix}{extension}",
     )
 
     try:
