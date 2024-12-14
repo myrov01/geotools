@@ -1,12 +1,9 @@
 import geopandas as gpd
 from shapely.ops import split
-from shapely.ops import unary_union
 from shapely.geometry import LineString
 from geotools.geom_calc import geom_calc
 import argparse
 import os
-
-# из-за того, что эту функцию вызывает и shapely и geopandas нам нужен единый формат wkt, иначе он просто не вернет то, что мы ожидаем, так как то, что возвращается должно быть сохранено geopandas-ом файлом и обратно
 
 
 def divide_polygon(polygon, max_vertices, direction="vertical"):
@@ -29,11 +26,9 @@ def divide_polygon(polygon, max_vertices, direction="vertical"):
 
     split_result = split(polygon, cutting_line)
 
-    parts = unary_union(split_result)
-
     valid_parts = []
 
-    for part in parts:
+    for part in split_result.geoms:
         valid_polygon = divide_polygon(
             part, max_vertices, next_direction)
         valid_parts.extend(valid_polygon)
