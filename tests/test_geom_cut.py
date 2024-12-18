@@ -17,7 +17,7 @@ def get_geometries(path):
 
 
 def test_simple_process_polygon():
-    geometries = get_geometries("testlayer3_without_holes.gpkg")
+    geometries = get_geometries("testlayer_without_holes.gpkg")
 
     all_geoms_length = 0
 
@@ -30,20 +30,20 @@ def test_simple_process_polygon():
 
 
 def test_no_process_polygon():
-    geometries = get_geometries("testlayer3_without_holes.gpkg")
+    geometries = get_geometries("testlayer_without_holes.gpkg")
 
     all_geoms_length = 0
 
     for geom in geometries:
         if geom:
-            divided_parts = process_polygon(geom, 16)
+            divided_parts = process_polygon(geom, 5)
             all_geoms_length += len(divided_parts)
 
     assert all_geoms_length == 1
 
 
-def test_polygon_one_holes_process_polygon():
-    geometries = get_geometries("testlayer4_one_hole.gpkg")
+def test_one_hole_polygon_process():
+    geometries = get_geometries("testlayer_one_hole.gpkg")
 
     all_geoms_length = 0
 
@@ -55,8 +55,8 @@ def test_polygon_one_holes_process_polygon():
     assert all_geoms_length == 5
 
 
-def test_rectangle_process_polygon():
-    geometries = get_geometries("testlayer7_rectangle.gpkg")
+def test_two_holes_polygon_process():
+    geometries = get_geometries("testlayer_two_holes.gpkg")
 
     all_geoms_length = 0
 
@@ -65,4 +65,30 @@ def test_rectangle_process_polygon():
             divided_parts = process_polygon(geom, 4)
             all_geoms_length += len(divided_parts)
 
-    assert all_geoms_length == 2
+    assert all_geoms_length == 8
+
+
+def test_rectangle_process():
+    geometries = get_geometries("testlayer_rectangle.gpkg")
+
+    all_geoms_length = 0
+
+    for geom in geometries:
+        if geom:
+            divided_parts = process_polygon(geom, 4)
+            all_geoms_length += len(divided_parts)
+
+    assert all_geoms_length == 3
+
+
+def test_c_process():
+    geometries = get_geometries("testlayer_c.gpkg")
+
+    all_geoms_length = 0
+
+    for geom in geometries:
+        if geom:
+            divided_parts = process_polygon(geom, 4)
+            all_geoms_length += len(divided_parts)
+
+    assert all_geoms_length == 8

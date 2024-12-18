@@ -25,6 +25,7 @@ def divide_polygon(polygon, max_vertices, direction="vertical"):
         next_direction = "vertical"
 
     split_result = split(polygon, cutting_line)
+    print(cutting_line.wkt)
 
     valid_parts = []
 
