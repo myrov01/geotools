@@ -58,6 +58,13 @@ def process_polygon(geom, max_vertices=200000):
     return valid_geometries
 
 
+def process_row(row, max_vertices):
+    geom = row["geometry"]
+    attributes = row.drop("geometry")
+    divided_parts = process_polygon(geom, max_vertices)
+    return [(part, attributes) for part in divided_parts]
+
+
 def main():
 
     initial_polygon_count = 0
@@ -108,14 +115,11 @@ def main():
 
         initial_polygon_count += len(gdf)
 
-        for index, row in gdf.iterrows():
-            geom = row["geometry"]
-
-            divided_parts = process_polygon(geom, args.max_vertices)
-
-            for part in divided_parts:
-                all_geometries.append(part)
-                all_attributes.append(row.drop("geometry"))
+        for _, row in gdf.iterrows():
+            processed = process_row(row, args.max_vertices)
+            for geom, attr in processed:
+                all_geometries.append(geom)
+                all_attributes.append(attr)
 
     result_gdf = gpd.GeoDataFrame(
         all_attributes, geometry=all_geometries, crs=gdf.crs)
