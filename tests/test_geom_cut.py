@@ -82,4 +82,3 @@ def test_c_process():
 def test_attribute_consistency():
     result = get_attributes_consistency("testlayer_c.gpkg", 4)
     assert result, "Test FAILED: Attributes are not consistent!"
-    print("Test PASSED: Detailed attribute check completed successfully!")
